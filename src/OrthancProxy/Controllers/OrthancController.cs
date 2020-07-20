@@ -61,6 +61,11 @@ namespace OrthancProxy.Controllers
                 switch(httpResponse.StatusCode) 
                 {
                     case HttpStatusCode.OK:
+                        // TODO: Find a better way to do this.
+                        // Need to know when we are asking for a file, and in turn, pass along the appropriate content type.
+                        if(path.Contains("file")) {
+                            return File((await httpResponse.Content.ReadAsStreamAsync()), "application/dicom");
+                        }
                         return Ok(await httpResponse.Content.ReadAsStringAsync());
                     case HttpStatusCode.Unauthorized:
                         return Unauthorized();
